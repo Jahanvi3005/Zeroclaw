@@ -1,0 +1,74 @@
+name: claw-auth-proxy
+
+networks:
+  internal:
+    driver: bridge
+  lifeatlas-net:
+    name: ${ZEROCLAW_NETWORK_NAME:-lifeatlas-net}
+    driver: bridge
+
+services:
+  docker-socket-proxy:
+    image: tecnativa/docker-socket-proxy:latest
+    restart: unless-stopped
+    environment:
+      CONTAINERS: "1"
+      EXEC: "1"
+      IMAGES: "1"
+      INFO: "1"
+      NETWORKS: "1"
+      POST: "1"
+      VERSION: "1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - internal
+
+  claw-proxy:
+    build:
+      context: ..
+    image: ${CLAW_PROXY_IMAGE:-lifeatlas/claw-proxy:latest}
+    container_name: claw-proxy
+    user: "65534:65534"
+    depends_on:
+      - docker-socket-proxy
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      DOCKER_HOST: tcp://docker-socket-proxy:2375
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:8081}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      ZEROCLAW_NETWORK_MODE: shared
+      ZEROCLAW_NETWORK_NAME: ${ZEROCLAW_NETWORK_NAME:-lifeatlas-net}
+      ZEROCLAW_PUSH_WEBHOOK_BASE_URL: http://claw-proxy:8000
+      ZEROCLAW_IMAGE: ${ZEROCLAW_IMAGE:-zeroclaw:latest}
+      ZEROCLAW_DATA_DIR: /zeroclaw-data
+      ZEROCLAW_HOST_DATA_DIR: ${ZEROCLAW_HOST_DATA_DIR:-/data/zeroclaw}
+      ZEROCLAW_TEMPLATES_DIR: /app/templates
+      ZEROCLAW_LLM_API_KEY: ${ZEROCLAW_LLM_API_KEY:-}
+      ZEROCLAW_LLM_PROVIDER: ${ZEROCLAW_LLM_PROVIDER:-openrouter}
+      ZEROCLAW_LLM_MODEL: ${ZEROCLAW_LLM_MODEL:-}
+      ADMIN_DATA_DIR: /admin-data
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:?ADMIN_JWT_SECRET is required}
+      ADMIN_JWT_TTL_SECONDS: ${ADMIN_JWT_TTL_SECONDS:-1800}
+      ADMIN_AUDIT_RETENTION_DAYS: ${ADMIN_AUDIT_RETENTION_DAYS:-90}
+      USER_CONFIG_ALLOWLIST_PATH: /app/data/user_config_allowlist.toml
+      TOKEN_ENCRYPTION_KEY: ${TOKEN_ENCRYPTION_KEY:?TOKEN_ENCRYPTION_KEY is required}
+      SUPABASE_URL: ${SUPABASE_DOCKER_URL:-${SUPABASE_URL:?SUPABASE_URL is required}}
+      SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL:-${SUPABASE_URL:?SUPABASE_URL is required}}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:?SUPABASE_ANON_KEY is required}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:?SUPABASE_SERVICE_ROLE_KEY is required}
+      ADMIN_WEBAUTHN_RP_ID: ${ADMIN_WEBAUTHN_RP_ID:?ADMIN_WEBAUTHN_RP_ID is required}
+      ADMIN_WEBAUTHN_RP_NAME: ${ADMIN_WEBAUTHN_RP_NAME:-Claw Admin}
+      ADMIN_WEBAUTHN_ORIGIN: ${ADMIN_WEBAUTHN_ORIGIN:?ADMIN_WEBAUTHN_ORIGIN is required}
+    volumes:
+      - ${ZEROCLAW_HOST_DATA_DIR:-/data/zeroclaw}:/zeroclaw-data
+      - ${ADMIN_HOST_DATA_DIR:-/data/admin}:/admin-data
+      - ../templates:/app/templates:ro
+      - ../data/user_config_allowlist.toml:/app/data/user_config_allowlist.toml:ro
+    networks:
+      - internal
+      - lifeatlas-net
+    ports:
+      - "${CLAW_PROXY_PORT:-8000}:8000"

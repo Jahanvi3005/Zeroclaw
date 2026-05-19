@@ -1,0 +1,12 @@
+.git
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+data/*
+!data/user_config_allowlist.toml
+docs/
+tests/
+.env*
+images/
+temp/

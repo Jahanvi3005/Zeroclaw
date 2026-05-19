@@ -1,0 +1,221 @@
+[skill]
+name = "lifeatlas"
+description = "Read LifeAtlas health, training, timeline, medicine, and event context through the proxy."
+version = "0.3.0"
+author = "lifeatlas"
+tags = ["lifeatlas", "health", "training", "context"]
+
+[[tools]]
+name = "get_weekly_training"
+description = "Get summarized Strava training volume for a specific recent week."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_weekly_training?token={{LIFEATLAS_TOOL_TOKEN}}&weeks_ago={{weeks_ago}}"
+[tools.args]
+weeks_ago = "0 for current week, 1 for last week, up to 52. Default: 0."
+
+[[tools]]
+name = "get_last_workout"
+description = "Get the user's most recent Strava workout."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_last_workout?token={{LIFEATLAS_TOOL_TOKEN}}"
+
+[[tools]]
+name = "get_recovery_status"
+description = "Get Oura recovery status from recent sleep and readiness data."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_recovery_status?token={{LIFEATLAS_TOOL_TOKEN}}"
+
+[[tools]]
+name = "get_recent_sleep"
+description = "Get Oura sleep quality summary for recent days."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_recent_sleep?token={{LIFEATLAS_TOOL_TOKEN}}&days={{days}}"
+[tools.args]
+days = "Number of recent days to analyze, from 1 to 90. Default: 7."
+
+[[tools]]
+name = "get_recent_readiness"
+description = "Get Oura readiness scores for recent days."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_recent_readiness?token={{LIFEATLAS_TOOL_TOKEN}}&days={{days}}"
+[tools.args]
+days = "Number of recent days to analyze, from 1 to 90. Default: 7."
+
+[[tools]]
+name = "get_heart_rate_trends"
+description = "Get Oura resting heart-rate trends for recent days."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_heart_rate_trends?token={{LIFEATLAS_TOOL_TOKEN}}&days={{days}}"
+[tools.args]
+days = "Number of recent days to analyze, from 1 to 90. Default: 7."
+
+[[tools]]
+name = "get_whoop_recovery_status"
+description = "Get Whoop recovery status from recent recovery and sleep data."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_whoop_recovery_status?token={{LIFEATLAS_TOOL_TOKEN}}"
+
+[[tools]]
+name = "get_whoop_recent_recovery"
+description = "Get Whoop recovery scores and HRV for recent days."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_whoop_recent_recovery?token={{LIFEATLAS_TOOL_TOKEN}}&days={{days}}"
+[tools.args]
+days = "Number of recent days to analyze, from 1 to 90. Default: 7."
+
+[[tools]]
+name = "get_whoop_recent_sleep"
+description = "Get Whoop sleep summary for recent days."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_whoop_recent_sleep?token={{LIFEATLAS_TOOL_TOKEN}}&days={{days}}"
+[tools.args]
+days = "Number of recent days to analyze, from 1 to 90. Default: 7."
+
+[[tools]]
+name = "get_whoop_recent_strain"
+description = "Get Whoop strain scores and activity for recent days."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_whoop_recent_strain?token={{LIFEATLAS_TOOL_TOKEN}}&days={{days}}"
+[tools.args]
+days = "Number of recent days to analyze, from 1 to 90. Default: 7."
+
+[[tools]]
+name = "get_whoop_heart_rate_trends"
+description = "Get Whoop heart-rate trends for recent days."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_whoop_heart_rate_trends?token={{LIFEATLAS_TOOL_TOKEN}}&days={{days}}"
+[tools.args]
+days = "Number of recent days to analyze, from 1 to 90. Default: 7."
+
+[[tools]]
+name = "get_timeline_entry_types"
+description = "Get available timeline entry types for the active profile."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_timeline_entry_types?token={{LIFEATLAS_TOOL_TOKEN}}"
+
+[[tools]]
+name = "get_timeline_entries"
+description = "Get timeline entries for life events, travel, injuries, and other context."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_timeline_entries?token={{LIFEATLAS_TOOL_TOKEN}}&limit={{limit}}&entry_type={{entry_type}}"
+[tools.args]
+limit = "Maximum entries to return, from 1 to 100. Default: 50."
+entry_type = "Optional exact entry type from get_timeline_entry_types."
+
+[[tools]]
+name = "get_injuries"
+description = "Get injuries for the active profile."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_injuries?token={{LIFEATLAS_TOOL_TOKEN}}&active_only={{active_only}}"
+[tools.args]
+active_only = "true for current injuries only, false for all injuries. Default: true."
+
+[[tools]]
+name = "get_current_medicines"
+description = "Get current medicines for the active profile."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_current_medicines?token={{LIFEATLAS_TOOL_TOKEN}}"
+
+[[tools]]
+name = "get_active_training_plan"
+description = "Get the active training plan for the user."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_active_training_plan?token={{LIFEATLAS_TOOL_TOKEN}}"
+
+[[tools]]
+name = "get_upcoming_sessions"
+description = "Get upcoming training sessions for the active plan."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_upcoming_sessions?token={{LIFEATLAS_TOOL_TOKEN}}&days={{days}}"
+[tools.args]
+days = "Number of future days to inspect, from 1 to 90. Default: 7."
+
+[[tools]]
+name = "get_recent_load_metrics"
+description = "Get recent training load metrics."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_recent_load_metrics?token={{LIFEATLAS_TOOL_TOKEN}}&days={{days}}"
+[tools.args]
+days = "Number of recent days to analyze, from 1 to 90. Default: 7."
+
+[[tools]]
+name = "get_user_events"
+description = "Get user-created events."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_user_events?token={{LIFEATLAS_TOOL_TOKEN}}&upcoming_only={{upcoming_only}}&limit={{limit}}"
+[tools.args]
+upcoming_only = "true for future events only, false for all events. Default: true."
+limit = "Maximum events to return, from 1 to 100. Default: 20."
+
+[[tools]]
+name = "get_selected_races"
+description = "Get selected races and upcoming race goals."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_selected_races?token={{LIFEATLAS_TOOL_TOKEN}}"
+
+[[tools]]
+name = "get_healthcare_summary"
+description = "Get healthcare summary for allergies, conditions, family history, and blood group."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_healthcare_summary?token={{LIFEATLAS_TOOL_TOKEN}}"
+
+[[tools]]
+name = "get_conditions"
+description = "Get user conditions for the active profile."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_conditions?token={{LIFEATLAS_TOOL_TOKEN}}"
+
+[[tools]]
+name = "get_bmr_summary"
+description = "Get latest BMR data for the active profile."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_bmr_summary?token={{LIFEATLAS_TOOL_TOKEN}}"
+
+[[tools]]
+name = "get_life_balance_summary"
+description = "Get latest life-balance scan for the active profile."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_life_balance_summary?token={{LIFEATLAS_TOOL_TOKEN}}"
+
+[[tools]]
+name = "list_health_data_files"
+description = "List the user's documents (PDFs, lab results, CSVs, images) saved in their LifeAtlas library. Returns metadata only — call get_health_data_file_content for the actual content. Use this before asking the user about documents you might already have access to."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/list_health_data_files?token={{LIFEATLAS_TOOL_TOKEN}}&timeline_entry_id={{timeline_entry_id}}"
+[tools.args]
+timeline_entry_id = "Optional UUID of a timeline entry. If set, only files attached to that entry are returned. Leave empty to list all files."
+
+[[tools]]
+name = "get_health_data_file_content"
+description = "Retrieve the content of a specific document by file_id. Returns extracted text inline when available (truncated to 4000 chars by default; pass full=true for the complete text). For documents without cached extraction, returns a workspace_path you can read with pdf_read or other workspace tools."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_health_data_file_content?token={{LIFEATLAS_TOOL_TOKEN}}&file_id={{file_id}}&full={{full}}"
+[tools.args]
+file_id = "UUID of the file from list_health_data_files."
+full = "true to return the complete extracted text, false (default) for a truncated preview."
+
+[[tools]]
+name = "list_log_events"
+description = "List the user's logged events (medicine intake, food, training, exercise, etc.) for the active profile. Each event may include a description, location, and an attached photo flag (has_photo). Use get_log_event_photo to retrieve a specific event's photo when relevant."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/list_log_events?token={{LIFEATLAS_TOOL_TOKEN}}&event_type={{event_type}}&days={{days}}&limit={{limit}}"
+[tools.args]
+event_type = "Optional free-text filter — e.g. 'medicine', 'food', 'training', 'exercise'. Leave empty for all types."
+days = "Number of recent days to include, from 1 to 365. Default: 30."
+limit = "Maximum events to return, from 1 to 200. Default: 50."
+
+[[tools]]
+name = "get_log_event_photo"
+description = "Retrieve the photo attached to a specific log event. Returns a workspace_path for the downloaded image and a pre-formatted image_tag (e.g. '[IMAGE:/zeroclaw-data/workspace/lifeatlas/photos/...]') that you can paste verbatim into your reply to display the photo to the user. Returns a 'no photo attached' message if the event has no photo."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/get_log_event_photo?token={{LIFEATLAS_TOOL_TOKEN}}&event_id={{event_id}}"
+[tools.args]
+event_id = "UUID of the event from list_log_events."
+
+[[tools]]
+name = "save_to_library"
+description = "Save a file from your workspace to the user's permanent LifeAtlas library, where it appears in their file list on the website. Returns a structured success/failure response: on success, includes a markdown_link you can paste into your reply. Supported file types: PDF, CSV, PNG, JPEG. For unsupported types (markdown, text, etc.), generate a PDF first or use [DOWNLOAD:] for transient sharing."
+kind = "http"
+command = "http://claw-proxy:8000/zeroclaw/tools/lifeatlas/save_to_library?token={{LIFEATLAS_TOOL_TOKEN}}&workspace_path={{workspace_path}}"
+[tools.args]
+workspace_path = "Workspace-relative path to the file you want to save (e.g. 'output/report.pdf', 'temp/1745923844_lab.pdf'). Must resolve inside your workspace."

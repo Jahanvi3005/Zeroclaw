@@ -1,0 +1,6 @@
+[skill]
+name = "send-files"
+description = "Share a workspace file with the user by emitting a [DOWNLOAD:] or [SAVE:] tag that the proxy replaces with a signed URL."
+version = "0.1.0"
+author = "lifeatlas"
+tags = ["lifeatlas", "files", "export"]

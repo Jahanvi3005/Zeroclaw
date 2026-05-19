@@ -1,0 +1,16 @@
+# Replace proxy.example.com and the VPN CIDR before deploying.
+proxy.example.com {
+  @admin path /claw-admin/*
+  handle @admin {
+    @vpn remote_ip 10.0.0.0/8
+    handle @vpn {
+      reverse_proxy claw-proxy:8000
+    }
+    respond "Forbidden" 403
+  }
+
+  # Public endpoints: /, /health, /zeroclaw/*
+  handle {
+    reverse_proxy claw-proxy:8000
+  }
+}

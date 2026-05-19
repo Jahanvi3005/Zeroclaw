@@ -1,0 +1,58 @@
+# systemd SYSTEM service for claw-auth-proxy.
+#
+# Runs as user clawgateway (who must be in the docker group, since
+# containers/orchestrator.py talks to /var/run/docker.sock via the Docker SDK).
+# Unlike a user service, this honors After=docker.service ordering
+# properly, and does not need `loginctl enable-linger`.
+#
+# Install:
+#   sudo cp deploy/claw-proxy.service /etc/systemd/system/claw-proxy.service
+#   sudo mkdir -p /home/clawgateway/logs
+#   sudo chown clawgateway:clawgateway /home/clawgateway/logs
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now claw-proxy
+#
+# Manage:
+#   sudo systemctl status  claw-proxy
+#   sudo systemctl restart claw-proxy
+#   sudo systemctl stop    claw-proxy
+#   sudo journalctl -u claw-proxy -f           # if StandardOutput=journal
+#   tail -f /home/clawgateway/logs/uvicorn.log # if StandardOutput=append:...
+
+[Unit]
+Description=claw-proxy (FastAPI WS auth proxy for ZeroClaw)
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=exec
+User=clawgateway
+Group=clawgateway
+WorkingDirectory=/home/clawgateway/zeroproxy
+Environment=HOME=/home/clawgateway
+ExecStart=/home/clawgateway/.local/bin/uv run uvicorn claw_proxy.app:app --host 0.0.0.0 --port 8000 --log-config deploy/log_config.yaml
+
+# Auto-restart on crash with backoff.
+Restart=on-failure
+RestartSec=3
+
+# Log to a file outside the repo dir. Use `append:` (not `file:`) so
+# restarts don't truncate. Swap both lines for `journal` to route to
+# journald instead (then use `journalctl -u claw-proxy`).
+StandardOutput=append:/home/clawgateway/logs/uvicorn.log
+StandardError=append:/home/clawgateway/logs/uvicorn.log
+
+# Graceful shutdown: uvicorn handles SIGTERM cleanly, give it room to
+# drain in-flight WS connections before SIGKILL.
+KillSignal=SIGTERM
+TimeoutStopSec=30
+
+# Environment: uncomment to load .env directly (systemd parses KEY=VALUE,
+# no shell expansion, no quoting tricks). Alternative: let python-dotenv
+# handle it at import time — which is already what config.py does, so
+# this line is usually unnecessary.
+#EnvironmentFile=/home/clawgateway/zeroproxy/.env
+
+[Install]
+WantedBy=multi-user.target

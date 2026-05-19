@@ -1,0 +1,47 @@
+[project]
+name = "claw-auth-proxy"
+version = "0.1.0"
+description = "OpenClaw auth proxy for LifeAtlas"
+requires-python = ">=3.12"
+dependencies = [
+    "bcrypt>=5.0.0",
+    "cryptography>=46.0.5",
+    "docker>=7.0.0",
+    "fastapi>=0.135.1",
+    "httpx>=0.28.1",
+    "pyjwt>=2.12.1",
+    "python-dotenv>=1.2.2",
+    "python-multipart>=0.0.22",
+    "pyyaml>=6.0.3",
+    "supabase>=2.15.0",
+    "tomli-w>=1.2.0",
+    "typer>=0.24.2",
+    "uvicorn>=0.41.0",
+    "webauthn>=2.7.1",
+    "websockets>=15,<16",
+]
+
+[project.scripts]
+claw-admin = "claw_proxy.cli.main:app"
+
+[dependency-groups]
+dev = [
+    "freezegun>=1.5.5",
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "pytest-mock>=3.15.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/claw_proxy"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+markers = [
+    "integration: tests that require a real Docker daemon (opt in: -m integration)",
+]
+addopts = "-m 'not integration'"

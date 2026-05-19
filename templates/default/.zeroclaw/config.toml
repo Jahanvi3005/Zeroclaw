@@ -1,0 +1,101 @@
+# ZeroClaw container config — managed by claw-auth-proxy template (schema v2).
+# API key injected via the API_KEY env var.
+# Provider/model written to [providers] by orchestrator at provision time.
+# Channel credentials overridden via ZEROCLAW_CHANNELS_LIFEATLAS_* env vars.
+
+schema_version = 2
+
+[providers]
+fallback = "openrouter"
+
+[providers.models.openrouter]
+model = "openrouter/auto"
+
+[runtime]
+kind = "native"
+
+[gateway]
+host = "0.0.0.0"
+port = 42617
+allow_public_bind = true
+require_pairing = false
+
+[autonomy]
+level = "full"
+workspace_only = true
+block_high_risk_commands = false
+require_approval_for_medium_risk = false
+max_actions_per_hour = 200
+max_cost_per_day_cents = 0
+allowed_roots = ["/dev/null"]
+forbidden_paths = []
+auto_approve = [
+    "file_read",
+    "file_write",
+    "file_edit",
+    "memory_recall",
+    "memory_store",
+    "web_search_tool",
+    "web_fetch",
+    "text_browser",
+    "calculator",
+    "glob_search",
+    "content_search",
+    "image_info",
+    "weather",
+    "shell",
+    "delegate",
+    "git_operations",
+]
+allowed_commands = [
+    "ls",
+    "pwd",
+    "cp",
+    "mv",
+    "mkdir",
+    "rm",
+    "find",
+    "git",
+    "curl",
+    "bash",
+    "sh",
+    "cat",
+    "wc",
+    "head",
+    "tail",
+    "grep",
+    "echo",
+    "date",
+    "du",
+    "df",
+    "touch",
+    "chmod",
+    "which",
+    "env",
+    "printenv",
+    "python",
+    "python3",
+    "node",
+    "npm",
+    "ps",
+    "pgrep",
+    "pkill",
+    "kill",
+]
+
+[web_fetch]
+enabled = true
+
+[web_search]
+enabled = true
+
+[text_browser]
+enabled = true
+
+[agents.research]
+provider = "openrouter"
+model = "anthropic/claude-sonnet-4-20250514"
+agentic = true
+allowed_tools = ["web_search_tool", "web_fetch", "text_browser", "file_write"]
+max_depth = 2
+memory_namespace = "delegate/research"

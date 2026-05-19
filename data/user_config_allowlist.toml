@@ -1,0 +1,7 @@
+allowed_paths = [
+  "llm.provider",
+  "llm.api-key",
+  "llm.model",
+  "channels.matrix.enabled",
+  "channels.matrix.access-token",
+]
